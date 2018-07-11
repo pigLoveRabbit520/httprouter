@@ -1,16 +1,26 @@
 <?php
 namespace httprouter;
 
+class Param {
+	public $key;
 
-// ByName returns the value of the first Param which key matches the given name.
-// If no matching Param is found, an empty string is returned.
-func (ps Params) ByName(name string) string {
-	for i := range ps {
-		if ps[i].Key == name {
-			return ps[i].Value
+	public $value;
+}
+
+class Params
+{
+	public $params;
+
+	// ByName returns the value of the first Param which key matches the given name.
+	// If no matching Param is found, an empty string is returned.
+	public function ByName(string $name) {
+		foreach ($this->params as $param) {
+			if $param->key == $name {
+				return $param->value;
+			}
 		}
+		return ""
 	}
-	return ""
 }
 
 class Router
@@ -119,7 +129,7 @@ class Router
 			$this->trees = [];
 		}
 
-		$root = $this->trees[$method]
+		$root = $this->trees[$method];
 		if (empty($root)) {
 			$root = new Node;
 			$this->trees[$method] = $root;
@@ -131,7 +141,7 @@ class Router
 	// HandlerFunc is an adapter which allows the usage of an http.HandlerFunc as a
 	// request handle.
 	public function HandlerFunc($method, string $path, $handler) {
-		$this->Handler($method, $path, $handler)
+		$this->Handler($method, $path, $handler);
 	}
 
 	// ServeFiles serves files from the given file system root.
