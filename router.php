@@ -144,6 +144,20 @@ class Router
 		$this->Handler($method, $path, $handler);
 	}
 
+	// Handler is an adapter which allows the usage of an http.Handler as a
+	// request handle. With go 1.7+, the Params will be available in the
+	// request context under ParamsKey.
+	public function Handler($method, string $path, $handler) {
+		$this->Handle(method, path,
+			func(w http.ResponseWriter, req *http.Request, p Params) {
+				ctx := req.Context()
+				ctx = context.WithValue(ctx, ParamsKey, p)
+				req = req.WithContext(ctx)
+				handler.ServeHTTP(w, req)
+			},
+		)
+	}
+
 	// ServeFiles serves files from the given file system root.
 	// The path must end with "/*filepath", files are then served from the local
 	// path /defined/root/dir/*filepath.
@@ -229,7 +243,7 @@ class Router
 			defer r.recv(w, req)
 		}
 
-		path := req.URL.Path
+		$path = req.URL.Path
 
 		if root := r.trees[req.Method]; root != nil {
 			if handle, ps, tsr := root.getValue(path); handle != nil {

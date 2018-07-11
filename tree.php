@@ -71,15 +71,15 @@ class Node
 				// Find the longest common prefix.
 				// This also implies that the common prefix contains no ':' or '*'
 				// since the existing key can't contain those chars.
-				i := 0
+				$i = 0
 				max := min(len(path), len($this->path))
 				for i < max && path[i] == $this->path[i] {
 					i++
 				}
 
 				// Split edge
-				if i < len(n.path) {
-					child := node{
+				if $i < len(n.path) {
+					child := new node{
 						path:      $this->path[i:],
 						wildChild: $this->wildChild,
 						nType:     static,
